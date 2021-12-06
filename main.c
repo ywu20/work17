@@ -16,6 +16,9 @@ void CREATE(){
 
   printf("Creating semaphore . . .\n");
   int semd = semget(SEM,1,IPC_CREAT | 0644);
+  union semun us;
+  us.val = 1;
+  int r = semctl(semd, 0, SETVAL, us);
   close(fd);
 }
 
@@ -29,14 +32,20 @@ void REMOVE(){
   int semd = semget(SEM,1,0);
   semctl(semd, IPC_RMID,0);
 
+  printf("The story . . .\n");
+  int fd = open("tele.txt", O_RDONLY);
+  char str [1000];
+  read(fd, str, 1000);
+  printf("%s",str);
+
 }
 int main(int argc, char ** argv){
-  // if arg is --create, creates the semaphore & shared memory
-  // if arg is --remove, removes semaphore & shared memory
+  // if arg is -c, creates the semaphore & shared memory
+  // if arg is -r, removes semaphore & shared memory
   if(argc){
-    if(!strcmp(argv[1], "--create")){
+    if(!strcmp(argv[1], "-c")){
       CREATE();
-    }else if(!strcmp(argv[1],"--remove")){
+    }else if(!strcmp(argv[1],"-r")){
       REMOVE();
     }
 
