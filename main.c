@@ -4,6 +4,15 @@
 #define SEM 11111
 #define MEM 22222
 
+
+union semun {
+  int val;                  //used for SETVAL
+  struct semid_ds *buf;     //used for IPC_STAT and IPC_SET
+  unsigned short  *array;   //used for SETALL
+  struct seminfo  *__buf;
+};
+
+
 void CREATE(){
   printf("creates\n");
   printf("making shared memory ...\n");
