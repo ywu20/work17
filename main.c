@@ -1,16 +1,25 @@
-#include<stdio.h>
-#include<sys/types.h>
-#include<sys/ipc.h>
-#include<sys/sem.h>
-#include<fcntl.h>
-#include<unistd.h>
-#include<string.h>
+#include "write.h"
+
 
 #define SEM 11111
 #define MEM 22222
 
 void CREATE(){
   printf("creates\n");
+  printf("making shared memory ...\n");
+  int shmd = shmget(MEM, sizeof(int), IPC_CREAT | 0644);
+  int * size = shmat(shmd,0,0);
+  *size = 0;
+  printf("Creating file . . . \n");
+  open("tele.txt", O_TRUNC | O_RDWR | O_CREAT, 0644);
+
+  printf("Creating semaphore . . .\n");
+  int semd = semget(SEM,1,IPC_CREAT | 0644);
+  printf("sema pid : %d\n", semd);
+  union semun us;
+  us.val = 1;
+  int r = semctl(semd, 0, SETVAL, us);
+
 }
 
 void REMOVE(){
