@@ -2,7 +2,19 @@
 
 #define MEM 22222
 #define SEM 11111
+
+/*
+union semun {
+  int val;                  //used for SETVAL
+  struct semid_ds *buf;     //used for IPC_STAT and IPC_SET
+  unsigned short  *array;   //used for SETALL
+  struct seminfo  *__buf;
+};
+*/
+
+
 void write_file(char * file){
+
   // open file for read
   int rd = open(file, O_RDONLY);
 
@@ -35,6 +47,23 @@ void write_file(char * file){
 
 }
 
-int main(){
+void sem(){
+  int semd = semget(SEM,1,0);
+  struct sembuf sb;
+  sb.sem_num = 0;
+  sb.sem_flg = SEM_UNDO;
+  sb.sem_op = -1;
+
+  semop(semd, &sb, 1);
+  printf("got the semaphore!\n");
   write_file("tele.txt");
+
+  sb.sem_op = 1;
+  semop(semd, &sb, 1);
+
+}
+
+int main(){
+  sem();
+  //write_file("tele.txt");
 }
