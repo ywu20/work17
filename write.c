@@ -4,7 +4,6 @@
 #define SEM 11111
 
 
-
 void write_file(char * file){
 
   // open file for read
@@ -14,14 +13,16 @@ void write_file(char * file){
   int shmd = shmget(MEM, 0,0);
   int *size = shmat(shmd,0,0);
 
-
+if(*size){
   // read last line
   char last_line[100];
   lseek(rd, *size * -1, SEEK_END);
   int a =read(rd, last_line, *size);
 
   printf("Last line of Telephone: %s\n",last_line);
-
+}else{
+  printf("You are at the first line!\n");
+}
 
   close(rd);
 
